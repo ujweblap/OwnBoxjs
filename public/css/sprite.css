@@ -1,0 +1,28 @@
+
+/* Start Sprite Master CSS */
+.bulb,.bullet_black,.bullet_blue,.bullet_delete,.bullet_error,.bullet_green,.bullet_orange,.bullet_red,.bullet_white,.bullet_wrench,.bullet_yellow,.calculator_black,.calculator,.caution_high_voltage,.cctv_camera,.cooler,.diagramm,.error,.exclamation,.lightbulb_off,.lightbulb,.no_requirements,.pi_math,.sprite{display: inline-block;background-repeat: no-repeat;background-image: url('sprite2.png');}
+.bulb{background-position:0px 0px;width:32px;height:32px;}
+.bullet_black{background-position:-34px 0px;width:32px;height:32px;}
+.bullet_blue{background-position:-68px 0px;width:32px;height:32px;}
+.bullet_delete{background-position:-102px 0px;width:32px;height:32px;}
+.bullet_error{background-position:-136px 0px;width:32px;height:32px;}
+.bullet_green{background-position:-170px 0px;width:32px;height:32px;}
+.bullet_orange{background-position:-204px 0px;width:32px;height:32px;}
+.bullet_red{background-position:-238px 0px;width:32px;height:32px;}
+.bullet_white{background-position:-272px 0px;width:32px;height:32px;}
+.bullet_wrench{background-position:-306px 0px;width:32px;height:32px;}
+.bullet_yellow{background-position:-340px 0px;width:32px;height:32px;}
+.calculator_black{background-position:-374px 0px;width:32px;height:32px;}
+.calculator{background-position:-408px 0px;width:32px;height:32px;}
+.caution_high_voltage{background-position:-442px 0px;width:32px;height:32px;}
+.cctv_camera{background-position:-476px 0px;width:32px;height:32px;}
+.cooler{background-position:0px -34px;width:32px;height:32px;}
+.diagramm{background-position:-34px -34px;width:32px;height:32px;}
+.error{background-position:-68px -34px;width:32px;height:32px;}
+.exclamation{background-position:-102px -34px;width:32px;height:32px;}
+.lightbulb_off{background-position:-136px -34px;width:32px;height:32px;}
+.lightbulb{background-position:-170px -34px;width:32px;height:32px;}
+.no_requirements{background-position:-204px -34px;width:32px;height:32px;}
+.pi_math{background-position:-238px -34px;width:32px;height:32px;}
+.sprite{background-position:-272px -34px;width:225px;height:52px;}
+/* End Sprite Master CSS */

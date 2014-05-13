@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html, body, #canvas{
+border: none;
+padding: 0;
+margin:0;
+}
+body{
+overflow:hidden;
+
+}
+</style>
+
+</head>
+<body>
+
+
+<script>
+// Default HTML5 Canvas Example
+// (cc-by-sa) Michael Markert for Procoding
+//var canvas;   // already defined in Procoding!
+var ctx;
+var x, y, nx, ny;
+var a=1;
+var height = window.innerHeight;
+
+var width = window.innerWidth;
+var radius = Math.floor(width/10);
+var strokeWidth = Math.floor(20);
+var delay = 1;
+var interval = 100;   // frameRate
+var frameCount = 0;
+var r, g, b;
+var rc, gc, bc;
+var canvas;
+var sico=0;
+var depth=0;
+// misc methods
+function random(max) {
+	return Math.floor(Math.random()*max);
+}
+function ag(x,y,r,d){
+	//ctx.save();
+	ctx.strokeStyle = "rgb("+random(255)+","+random(255)+","+random(255)+")";
+	ctx.translate(x,y);
+	ctx.rotate(d*Math.PI/180);
+	ctx.beginPath();
+	ctx.moveTo(0,0);
+	ctx.lineTo(0,0-r);
+	ctx.stroke();
+	ctx.closePath();
+	//ctx.restore();
+}
+
+
+function tree(x,y,r,d,w){
+	d--;
+	if(d!=0){
+	
+	ag(x,y,r,w);
+	//ag2(x,y,r,w);
+	//ag(x,y,r,-80);
+	//ag(x,y,r,-90);
+	//ag(x,y,r,40);
+	//ag(x,y,r,-30);
+	//ctx.rotate(-30*Math.PI/180);
+	//this.ctx.save();
+	//ctx.translate(x,y-r);
+	//this.ctx.rotate(20*Math.PI/180);
+	//this.ctx.restore;	
+	}
+};
+
+
+function clear() {
+	ctx.save();
+	ctx.fillStyle = "rgb("+parseInt(rc-k)+","+parseInt(gc-k)+","+parseInt(bc-k)+")";
+	ctx.fillRect(0, 0, width, height);
+	// also fill bg (not necessary but looks nice when resizing)
+	document.querySelector("body").style.backgroundColor = ctx.fillStyle;
+	ctx.restore();
+}
+
+// init
+function init() {
+
+	canvas = document.createElement("canvas");
+	canvas.id="WWW";
+	canvas.width=width;
+	canvas.height=height;
+	document.body.appendChild(canvas);
+	// get context
+	ctx = canvas.getContext("2d");
+	// init some values
+	r = random(255);
+	g = random(255);
+	b = random(255);
+	rc = r - random(60);
+	gc = g - random(60);
+	bc = b - random(60);
+	
+	x = width/2;
+	y = height/2;
+	nx = x;
+	ny = y;
+	// setup events
+	//window.addEventListener('keydown', keyDown, true);
+	//canvas.addEventListener('mousemove', mouseMoved, true);
+	//canvas.addEventListener('touchmove', touchMoved, true);
+	// setup drawing routine
+	//setInterval(draw, interval);
+	ctx.lineWidth = 10;
+	ctx.beginPath();
+	ctx.moveTo(width/2,height);
+	ctx.lineTo(width/2,height-400);
+	ctx.stroke();
+	ctx.closePath();
+	tree(width/2,height-400,200,15,80);
+}
+// call init once
+init();
+</script> 
+
+
+
+</body>
+</html>

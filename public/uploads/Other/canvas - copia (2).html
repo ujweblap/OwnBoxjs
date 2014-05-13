@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html, body, #canvas{
+border: none;
+padding: 0;
+margin:0;
+}
+body{
+overflow:hidden;
+
+}
+</style>
+
+</head>
+<body>
+
+
+<script>
+// Default HTML5 Canvas Example
+// (cc-by-sa) Michael Markert for Procoding
+//var canvas;   // already defined in Procoding!
+var ctx;
+var x, y, nx, ny;
+var a=1;
+var height = window.innerHeight;
+
+var width = window.innerWidth;
+var radius = Math.floor(width/10);
+var strokeWidth = Math.floor(20);
+var delay = 1;
+var interval = 100;   // frameRate
+var frameCount = 0;
+var r, g, b;
+var rc, gc, bc;
+var canvas;
+var sico=0;
+var depth=0;
+// misc methods
+function random(max) {
+	return Math.floor(Math.random()*max);
+}
+// convenience drawing methods
+function circle(x, y, r, dep,a) {
+	//ctx.translate(x, y);
+	//ctx.rotate(1);
+	
+	//circle(x, y, r);
+	if (dep<depth){
+		dep++;
+		ctx.save();
+		ctx.translate(x, y);
+		if (dep%2===0){
+			ctx.rotate((a)*Math.PI/20);
+		}
+		else {
+			ctx.rotate((a)*Math.PI/20);
+		}
+		circle(0+r*2, 0, r/2,dep,a);
+		circle(0-r*2, 0, r/2,dep,a);
+		circle(0, 0-r*2, r/2,dep,a);
+		circle(0, 0+r*2, r/2,dep,a);
+		ctx.restore();
+	};
+	ctx.lineWidth = strokeWidth/dep;
+	ctx.strokeStyle = "rgb("+parseInt(rc+k+dep*9)+","+parseInt(gc+k+dep*9)+","+parseInt(bc-k+dep*3)+")";
+	//ctx.strokeStyle = "black";
+	
+	
+	//for (i=0;i<5;i++){
+		ctx.moveTo(x, y);
+		ctx.beginPath();
+		ctx.arc(x, y, r, 0, Math.PI * 2, true);
+		ctx.arc(y, x, r, 0, Math.PI * 2, true);
+		ctx.closePath();
+		//ctx.fill();
+		ctx.stroke();
+	//}
+	
+	
+}
+function clear() {
+	ctx.save();
+	ctx.fillStyle = "rgb("+parseInt(rc-k)+","+parseInt(gc-k)+","+parseInt(bc-k)+")";
+	ctx.fillRect(0, 0, width, height);
+	// also fill bg (not necessary but looks nice when resizing)
+	document.querySelector("body").style.backgroundColor = ctx.fillStyle;
+	ctx.restore();
+}
+// drawing routine
+function draw() {
+
+//sico=radius*Math.sin(Math.PI / 2);
+//k=Math.abs(Math.sin( frameCount / 4 ));
+
+//console.log("here");
+//console.log(k);
+	frameCount++;
+	a+=6;
+	
+	k=4*Math.sin( frameCount / 4 );
+	
+	console.log(k);
+	//depth=Math.abs(Math.round(k));
+	//clear();
+	//ctx.translate(x, y);
+	//ctx.rotate(1);
+	// clear background
+	clear();
+	// update radius
+	radius = radius-k;
+	// track circle to new destination
+	x+=(nx-x)/delay;
+	y+=(ny-y)/delay;
+	// draw ellipse
+	ctx.fillStyle = "rgba("+parseInt(rc-k)+","+parseInt(gc-k)+","+parseInt(bc+k)+",100)";
+	
+	ctx.save();
+	ctx.translate(x, y);
+	ctx.rotate((a)*Math.PI/180);
+	circle(0, 0, radius,0,a);
+	ctx.restore();
+	//setTimeout(draw(),1000);
+}
+// Event Handlers
+function mouseMoved(e) {
+	nx = e.pageX;
+	ny = e.pageY;
+}
+function touchMoved(e) {
+	if(e.touches.length) {
+		nx = e.touches[0].pageX;
+		ny = e.touches[0].pageY;
+	}
+}
+function keyDown(e) {
+	var factor = Math.floor( width/10 );
+    switch (e.keyCode) {
+		case 38: // Up arrow
+			ny-=factor;
+			break;
+		case 40: // Down arrow
+			ny+=factor;
+			break;
+		case 37: // Left arrow
+			nx-=factor;
+			break;
+		case 39: // Right arrow
+			nx+=factor;
+			break;
+    }
+}
+// init
+function init() {
+
+	canvas = document.createElement("canvas");
+	canvas.id="WWW";
+	canvas.width=width;
+	canvas.height=height;
+	document.body.appendChild(canvas);
+	// get context
+	ctx = canvas.getContext("2d");
+	// init some values
+	r = random(255);
+	g = random(255);
+	b = random(255);
+	rc = r - random(60);
+	gc = g - random(60);
+	bc = b - random(60);
+	
+	x = width/2;
+	y = height/2;
+	nx = x;
+	ny = y;
+	// setup events
+	window.addEventListener('keydown', keyDown, true);
+	canvas.addEventListener('mousemove', mouseMoved, true);
+	canvas.addEventListener('touchmove', touchMoved, true);
+	// setup drawing routine
+	setInterval(draw, interval);
+	//draw();
+}
+// call init once
+init();
+</script> 
+
+
+
+</body>
+</html>

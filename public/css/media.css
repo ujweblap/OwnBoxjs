@@ -1,0 +1,70 @@
+#content {
+	margin-top: 52px;
+}
+
+#fl_container {
+	display: block;
+	width: 98%;
+}
+
+#fl_container .slide_inner {
+	width: 100%;
+	left: 0;
+	top: 0;
+	height: 100%;
+	display: block;
+	position: relative;
+}
+
+#fl_container .file_list {
+	display: inline-block;
+}
+
+.file_list {
+	list-style: none;
+	margin: 15px 1%;
+	padding: 0;
+	width: 98%;
+}
+
+.is_file.btn-block, .is_dir.btn-block {
+	margin: 0 !important;
+}
+
+.is_file {
+	display: inline-block;
+	width: 33%;
+	margin: 0;
+}
+
+.is_dir {
+	display: inline-block;
+	width: 33%;
+	margin: 0;
+}
+
+#videoModal .modal-body img .modal-content {
+	max-width: 99%;
+	max-height: 99%;
+	
+}
+
+#musicPlayer {
+	display: none;
+}
+
+#musicPlay {
+	background: url('../img/ico/glyphicons_173_play.png') left top no-repeat;
+	width: 22px;
+	height: 22px;
+	display: inline-block;
+}
+#musicStop {
+	background: url('../img/ico/glyphicons_175_stop.png') left top no-repeat;
+	width: 22px;
+	height: 22px;
+	display: inline-block;
+}
+.musicName {
+	color: #fefefe;
+}
