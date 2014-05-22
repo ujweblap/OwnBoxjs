@@ -24,7 +24,7 @@ module.exports = (function(){
         }
     };
 
-    var getFileList = function(socket, data){
+    var getFileList = function(data, callback){
         media_depth = data.path.split("/");
         if(data.path == ""){
             media_depth.pop();
@@ -68,9 +68,9 @@ module.exports = (function(){
                         "depth":media_depth.length,
                         "path": data.path
                     };
-                    socket.emit('dataFileList',send_data, function() {
-                        console.log();
-                    })
+                    if(typeof callback === "function"){
+                    	callback(send_data);
+                    }
                 });
             }
         });

@@ -42,6 +42,16 @@ var express = require('express'),
             }
         );
     });
+    app.post('/api/getFileList', function(req, res){
+    	var data = req.body;
+	    if(typeof data.path != "undefined"){
+		    fileBrowser.getFileList(data, function(send_data){
+			    res.send(send_data);
+		    });
+	    } else {
+		    res.send({error:"error_no_path"});
+	    }
+    });
 	
 	app.use(express.static(__dirname + '/public'));
 
@@ -53,7 +63,11 @@ var express = require('express'),
 		
 		socket.on('getFileList', function(data) {
 			if(typeof data.path != "undefined"){
-                fileBrowser.getFileList(socket, data);
+                fileBrowser.getFileList(data, function(send_data){
+	                 socket.emit('dataFileList',send_data, function() {
+                        console.log({data:data,send_data:send_data});
+                    });
+                });
 			}
 		});
 		
