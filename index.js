@@ -14,6 +14,8 @@ var express = require('express'),
     app.configure(function(){
         app.use(express.methodOverride());
         app.use(express.multipart());
+        app.use(express.json());
+        app.use(express.urlencoded());
     });
 
 	app.get('/', function(req,res){
@@ -42,6 +44,10 @@ var express = require('express'),
             }
         );
     });
+    app.post('/',function(req,res){
+	   console.log(req);
+	   res.send(req.body); 
+    });
     app.post('/api/getFileList', function(req, res){
     	var data = req.body;
 	    if(typeof data.path != "undefined"){
@@ -49,6 +55,7 @@ var express = require('express'),
 			    res.send(send_data);
 		    });
 	    } else {
+	    	console.log(req.body);
 		    res.send({error:"error_no_path"});
 	    }
     });
