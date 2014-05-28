@@ -87,17 +87,16 @@ var express = require('express'),
 			socket.emit('log', array);
 		}
 	});
-/*
+
 //handle exit
 process.stdin.resume();
 process.on('SIGINT', function () {
-	console.log('Good bye. RaspberryIO now shutting down...');
-	//pins.closeAll(closeProcess);
+	console.log('Good bye. OwnBoxjs now shutting down...');
     //TODO! close
+    closeProcess();
 });
 
 var closeProcess = function() {
 	console.log(" --- EXIT --- ");
 	process.exit();
 };
-    */
