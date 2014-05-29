@@ -24,8 +24,8 @@ var express = require('express'),
 	});
     app.post('/api/uploadfile', function(req, res) {
         //console.log("uploads",req);
-        console.log("-----!! UPLOAD !! --------");
-        console.log(JSON.stringify(req.files.uploadFile));
+        //console.log("-----!! UPLOAD !! --------");
+        //console.log(JSON.stringify(req.files.uploadFile));
         var serverPath = '/uploads/' + req.files.uploadFile.name;
 
         require('fs').rename(
@@ -39,8 +39,8 @@ var express = require('express'),
                     });
                     return;
                 }
-                console.log("---!serverPath!---");
-				console.log(serverPath);
+                //console.log("---!serverPath!---");
+				//console.log(serverPath);
                 res.send({
                     path: serverPath
                 });
@@ -48,7 +48,7 @@ var express = require('express'),
         );
     });
     app.post('/',function(req,res){
-	   console.log(req);
+	   //console.log(req);
 	   res.send(req.body); 
     });
     app.post('/api/getFileList', function(req, res){
