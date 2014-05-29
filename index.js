@@ -24,7 +24,8 @@ var express = require('express'),
 	});
     app.post('/api/uploadfile', function(req, res) {
         //console.log("uploads",req);
-        console.log(JSON.stringify(req.files));
+        console.log("-----!! UPLOAD !! --------");
+        console.log(JSON.stringify(req.files.uploadFile));
         var serverPath = '/uploads/' + req.files.uploadFile.name;
 
         require('fs').rename(
@@ -33,11 +34,13 @@ var express = require('express'),
             function(error) {
                 if(error) {
                     res.send({
-                        error: 'Ah crap! Something bad happened'
+                        error: 'Ah crap! Something bad happened at: '+__dirname + '/public' + serverPath,
+                        e: error
                     });
                     return;
                 }
-
+                console.log("---!serverPath!---");
+				console.log(serverPath);
                 res.send({
                     path: serverPath
                 });
@@ -76,6 +79,14 @@ var express = require('express'),
                     });
                 });
 			}
+		});
+		
+		socket.on('uploadStart', function (data) { //data contains the variables that we passed through in the html file
+			fileBrowser.uploadFileStart(socket, data);
+		});
+		
+		socket.on('Upload', function (data){
+			fileBrowser.uploadData(socket, data);
 		});
 		
 		/* TODO! socket closed / disconnected event handling */
