@@ -1,9 +1,12 @@
 var site = {
 	active_menu : "",
 	templates: "template/",
+	cache: {},
 	initSite: function(){
 		console.log("initSite");
 		this.$loading = $("#loading");
+		this.$fader = $("#fader");
+		//this.$fader.on('click',this.closeModal);
 		$("header").load(this.templates+"media_menu.html",this.initMenu);
 		this.changeMenu("media");
 	},
@@ -18,7 +21,34 @@ var site = {
 		if (this.active_menu != menuname) {
 			this.menuname = menuname;
 			this.showLoad();
-			$("#content").load(this.templates+menuname+".html",site.changeMenuSelected);
+			if(this.active_menu == "upload"){
+				site.closeModal();
+			}
+			if(menuname == "upload"){
+				if(this.active_menu != ""){
+					site.cache[this.active_menu] = $("#content").find('.content_'+this.active_menu).detach();
+				}
+				site.changeMenuSelected();
+			} else {
+				if(typeof site.cache[menuname] != "undefined"){
+					site.cache[this.active_menu] = $("#content").find('.content_'+this.active_menu).detach();
+					$("#content").append(site.cache[menuname]);
+					site.changeMenuSelected();
+				} else {
+					if(this.active_menu != ""){
+						site.cache[this.active_menu] = $("#content").find('.content_'+this.active_menu).detach();
+					}
+					var $loaded_content = $("<div />");
+					$loaded_content.addClass('content_'+menuname);
+					site.cache[menuname] = $loaded_content;
+					$loaded_content.load(this.templates+menuname+".html",function() {
+						site.cache[menuname] = $loaded_content;
+						site.changeMenuSelected();
+						$("#content").append($loaded_content);
+					});
+					//$("#content").load(this.templates+menuname+".html",site.changeMenuSelected);
+				}
+			}
 		}
 	},
 	changeMenuSelected: function() {
@@ -28,7 +58,11 @@ var site = {
 		site.active_menu = site.menuname;
 		//run site action
 		//console.log(site.siteActions[site.menuname]);
-		site.siteActions[site.menuname].call(site);
+		if(typeof site.siteActions[site.menuname] === "function"){
+			site.siteActions[site.menuname].call(site);
+		} else {
+			console.log("not implemented menuAction: "+site.menuname);
+		}
 	},
 	showLoad: function(){
 		site.$loading.show();
@@ -47,8 +81,23 @@ var site = {
 			$("#fl_container").trigger('siteChange', ["media"]);
 		},
 		music: function() {
-		
+			
+		},
+		upload: function(){
+			site.showUploadModal();
 		}
+	},
+	showUploadModal: function() {
+		this.$fader.fadeIn(200);
+		$("#uploadMenu").css("top", "-100%").show().animate({top:"50px"});
+		/*
+		$('#modal').on('hidden.bs.modal', function (e) {
+			$("#modalBody").html("");
+		});*/
+	},
+	closeModal: function() {
+		site.$fader.fadeOut(200);
+		$("#uploadMenu").animate({top:"-100%"});
 	}
 };
 
@@ -92,7 +141,7 @@ $(function() {
 	}
 	socket.on("fileContentResponse", function(data){
 		//$("#videoModalBody").html("<textarea id='file_content_original' class='code_mirror file_content'>"+data+"</textarea>");
-		var myCodeMirror = CodeMirror(document.getElementById('videoModalBody'), {
+		var myCodeMirror = CodeMirror(document.getElementById('modalBody'), {
 		  value: data,
 		  mode:  "javascript"
 		});
@@ -115,6 +164,7 @@ $(function() {
 		}
 		$.each(data.files_data,function(elem) {
 			var $li = $("<li />");
+			$li.addClass('col-xs-12');
 			var $elem_icon = $("<span />");
 				$elem_icon.addClass("glyphicon");
 			var act_path = current_path;
@@ -146,10 +196,11 @@ $(function() {
 			if (data.files_data[elem]["is_file"]) {
 				$li.addClass("is_file btn btn-info btn-block");
 				$li.addClass("file_ext_"+data.files_data[elem]["ext"]);
-				$li.data("ext", data.files_data[elem]["ext"]);
+				$li.data("ext", data.files_data[elem]["ext"].toLowerCase());
 				$li.data("path", data.files_data[elem]["public_path"]);
-                $li.append("<a href='"+data.files_data[elem]['public_path']+"'><i ico='pi_math'>P</i></a>");
-				switch (data.files_data[elem]["ext"]) {
+                $li.append("<a href='"+data.files_data[elem]['public_path']+"' title='Download' class='download-file' download><i class='glyphicon glyphicon-cloud-download'></i> </a>");
+				switch (data.files_data[elem]["ext"].toLowerCase()) {
+					case "mov":
 					case "mp4":
 						$elem_icon.addClass("glyphicon-film");
 					break;
@@ -185,22 +236,6 @@ $(function() {
 		$file_list.append($directory_list);
 		$file_list.append($files_list);
 	});
-    $upload = $("#uploadForm");
-    $upload.on("submit", function(event){
-        $(this).ajaxSubmit({
-
-            error: function(xhr) {
-                status('Error: ' + xhr.status);
-            },
-
-            success: function(response) {
-                //TODO: We will fill this in later
-                alert("uploaded complete");
-            }
-        });
-        event.preventDefault();
-        return false;
-    });
 	$refresh = $("#refresh");
 	$(document).on("click","#refresh",function() {
 		getFileList(current_path);
@@ -226,11 +261,11 @@ $(function() {
 		var file_path = $(this).data("path");
 		switch ($(this).data("ext")) {
 			case "html":
-                $("#videoModalName").html($(this).children(".file_name").html());
-                $("#videoModalBody").html("<iframe src='"+file_path+"' width='100%' height='100%'></iframe>");
-                $("#videoModal").modal();
-                $('#videoModal').on('hidden.bs.modal', function (e) {
-                    $("#videoModalBody").html("");
+                $("#modalName").html($(this).children(".file_name").html());
+                $("#modalBody").html("<iframe src='"+file_path+"' width='100%' height='100%'></iframe>");
+                $("#modal").modal();
+                $('#modal').on('hidden.bs.modal', function (e) {
+                    $("#modalBody").html("");
                 });
             break;
 			case "txt":
@@ -240,20 +275,21 @@ $(function() {
 			case "xml":
 				fileContentRequest(file_path);
 				//getFileContent(file_path);
-				$("#videoModalName").html($(this).children(".file_name").html());
+				$("#modalName").html($(this).children(".file_name").html());
 				//$("#videoModalBody").html("<iframe width='100%' height='100%' src='"+file_path+"'></iframe>");
-				$("#videoModal").modal();
+				$("#modal").modal();
 				//var myCodeMirror = CodeMirror.fromTextArea($("#videoModalBody iframe"));
-				$('#videoModal').on('hidden.bs.modal', function (e) {
-					$("#videoModalBody").html("");
+				$('#modal').on('hidden.bs.modal', function (e) {
+					$("#modalBody").html("");
 				});
 			break;
+			case "mov":
 			case "mp4":
 				//alert("mp4");
-				$("#videoModalName").html($(this).children(".file_name").html());
-				$("#videoModalBody").html("<video width='100%' height='100%' controls><source src='"+file_path+"'></video>");
-				$("#videoModal").modal();
-				$('#videoModal').on('hidden.bs.modal', function (e) {
+				$("#modalName").html($(this).children(".file_name").html());
+				$("#modalBody").html("<video width='100%' height='100%' controls><source src='"+file_path+"'></video>");
+				$("#modal").modal();
+				$('#modal').on('hidden.bs.modal', function (e) {
 					$("#videoModalBody").html("");
 				});
 				//video popup
@@ -270,11 +306,11 @@ $(function() {
 			case "gif":
 			case "bmp":
 			case "ico":
-				$("#videoModalName").html($(this).children(".file_name").html());
-				$("#videoModalBody").html("<img src='"+file_path+"' class='img-thumbnail'>");
-				$("#videoModal").modal();
-				$('#videoModal').on('hidden.bs.modal', function (e) {
-					$("#videoModalBody").html("");
+				$("#modalName").html($(this).children(".file_name").html());
+				$("#modalBody").html("<img src='"+file_path+"' class='img-thumbnail'>");
+				$("#modal").modal();
+				$('#modal').on('hidden.bs.modal', function (e) {
+					$("#modalBody").html("");
 				});
 			break;
 		}
@@ -295,4 +331,99 @@ $(function() {
 			getFileList("");
 		}
 	});
+	
+	/* uploader */
+
+    $upload = $("#uploadForm");
+    $(document).on("submit","#uploadForm", function(event){
+        $(this).ajaxSubmit({
+
+            error: function(xhr) {
+                status('Error: ' + xhr.status);
+            },
+
+            success: function(response) {
+                //TODO: We will fill this in later
+                console.log(response);
+                alert("uploaded complete");
+            }
+        });
+        event.preventDefault();
+        return false;
+    });
+
+	
+	var SelectedFile;
+	function FileChosen(evnt) {
+	    SelectedFile = evnt.target.files[0];
+	    document.getElementById('NameBox').value = SelectedFile.name;
+	}
+	
+	var FReader;
+	var Name;
+	function StartUpload(){
+	    if(document.getElementById('FileBox').value != "")
+	    {
+	        FReader = new FileReader();
+	        Name = document.getElementById('NameBox').value;
+	        var Content = "<span id='NameArea'>Uploading " + SelectedFile.name + " as " + Name + "</span>";
+	        Content += '<div id="ProgressContainer" class="alert alert-info"><i class="glyphicon glyphicon-arrow-up"></i> <span id="percent">0%</span> <div id="ProgressBar">';
+	        Content += '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="sr-only">0%</span></div></div>';
+	        Content +='</div></div>';
+	        Content += "<span id='Uploaded'> - <span id='MB'>0</span>/" + Math.round(SelectedFile.size / 1048576) + "MB</span>";
+	        document.getElementById('UploadArea').innerHTML = Content;
+	        FReader.onload = function(evnt){
+	            socket.emit('Upload', { 'Name' : Name, Data : evnt.target.result });
+	        }
+	        socket.emit('uploadStart', { 'Name' : Name, 'Size' : SelectedFile.size });
+	    }
+	    else
+	    {
+	        alert("Please Select A File");
+	    }
+	}
+	
+	socket.on('MoreData', function (data){
+	    UpdateBar(data['Percent']);
+	    var Place = data['Place'] * 524288; //The Next Blocks Starting Position
+	    var NewFile; //The Variable that will hold the new Block of Data
+	    console.log("--SELECTED FILE--");
+	    console.log(SelectedFile);
+	    if(SelectedFile.webkitSlice) 
+	        NewFile = SelectedFile.webkitSlice(Place, Place + Math.min(524288, (SelectedFile.size-Place)));
+	    else if(SelectedFile.mozSlice)
+	        NewFile = SelectedFile.mozSlice(Place, Place + Math.min(524288, (SelectedFile.size-Place)));
+	    else
+	    	NewFile = SelectedFile.slice(Place, Place+Math.min(524288, (SelectedFile.size-Place)));
+	    FReader.readAsBinaryString(NewFile);
+	});
+	 
+	function UpdateBar(percent){
+	    //$('#ProgressBar').css('width',percent + '%');
+	    $('#ProgressBar .progress-bar').attr('aria-valuenow', parseInt(percent,10)).css('width', percent+'%');
+	    document.getElementById('percent').innerHTML = (Math.round(percent*100)/100) + '%';
+	    var MBDone = Math.round(((percent/100.0) * SelectedFile.size) / 1048576);
+	    document.getElementById('MB').innerHTML = MBDone;
+	}
+	var Path = "http://localhost:2013/";
+	 
+	socket.on('Done', function (data){
+		$("#uploadModal .alert").show();
+	    var Content = "File Successfully Uploaded !!"
+	    //Content += "<img id='Thumb' src='" + Path + data['path'] + "' alt='" + Name + "'><br>";
+	    Content += "<button  type='button' name='Upload' value='' id='Restart' class='Button'>Upload Another</button>";
+	    document.getElementById('UploadArea').innerHTML = Content;
+	    document.getElementById('Restart').addEventListener('click', Refresh);
+	});
+	function Refresh(){
+	    location.reload(true);
+	}
+	
+	if(window.File && window.FileReader){ //These are the relevant HTML5 objects that we are going to use 
+		$(document).on('click','#UploadButton', StartUpload);  
+		$(document).on('change','#FileBox', FileChosen);
+	} else {
+		$('#UploadArea').html("Your Browser Doesn't Support The File API Please Update Your Browser<br>Try simple upload:<br>");
+		$upload.show();
+	}
 });

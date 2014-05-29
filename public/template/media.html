@@ -3,6 +3,21 @@
 	<option value="SD">microSD</option>
 </select>
 <div class="btn-toolbar">
+	<div class="btn-group">
+	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	    <span class="glyphicon glyphicon-hdd"></span> <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a href="#">HDD</a></li>
+	    <li><a href="#">SD</a></li>
+	    <li><a href="#">Something else here</a></li>
+	    <li class="divider"></li>
+	    <li><a href="#">Separated link</a></li>
+	  </ul>
+	</div>
+	<div class="btn-group">
+		<label class="btn btn-success" id="new_folder"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-folder-open"></i></label>
+	</div>
 	<div id="path" class="btn-group">
 		<label class="btn btn-default" id="refresh"><span class="glyphicon glyphicon-refresh"></span></label>
 		<label class="btn btn-primary" id="home_tree" data-path="" data-depth="0"><span class="glyphicon glyphicon-home"></span></label>
@@ -17,15 +32,15 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade bs-modal-lg" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade bs-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="videoModalName">Modal title</h4>
-      </div>
-      <div class="modal-body" id="videoModalBody">
-      </div>
-    </div>
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="modalName">Modal title</h4>
+	  </div>
+	  <div class="modal-body" id="modalBody">
+	  </div>
+	</div>
   </div>
 </div>

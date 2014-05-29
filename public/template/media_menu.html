@@ -7,15 +7,29 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">ViziOON</a>
+          <a class="menu menu_home navbar-brand" rel="home"><i class="glyphicon glyphicon-cloud"></i> ownBoxjs</a>
         </div>
         <div  class="collapse navbar-collapse">
           <ul id="menu" class="nav navbar-nav">
-            <li><a class="menu menu_dashboardmedia"  rel="dashboardmedia">Home</a></li>
-            <li><a class="menu menu_media" rel="media">Media</a></li>
-            <li><a class="menu menu_video1" rel="video1">Video</a></li>
-            <li><a class="menu menu_music" rel="music">Music</a></li> 
+            <li><a class="menu menu_upload" rel="upload"><i class="glyphicon glyphicon-cloud-upload"></i> Upload</a></li>
+            <li><a class="menu menu_media" rel="media"><i class="glyphicon glyphicon-hdd"></i> Media</a></li>
+            <li><a class="menu menu_photo" rel="photo"><i class="glyphicon glyphicon-camera"></i> Photo</a></li>
+            <li><a class="menu menu_video" rel="video"><i class="glyphicon glyphicon-facetime-video"></i> Video</a></li>
+            <li><a class="menu menu_music" rel="music"><i class="glyphicon glyphicon-headphones"></i> Music</a></li>
+            <li><a class="menu menu_note" rel="note"><i class="glyphicon glyphicon-comment"></i> notes</a></li>
+            <li><a class="menu menu_link" rel="link"><i class="glyphicon glyphicon-globe"></i> link</a></li>
+            <li><a class="menu menu_info"  rel="info"><i class="glyphicon glyphicon-info-sign"></i>nfo</a></li>
           </ul>
+          <ul class="nav navbar-right navbar-nav">
+          	<li>
+	          <form class="navbar-form navbar-left" role="search">
+	            <div class="form-group">
+	              <input type="text" class="form-control" placeholder="Search">
+	            </div>
+	            <button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-search"></i></button>
+	          </form>
+	         </li>
+	      </ul> 
           <ul class="nav navbar-right navbar-nav">
           	<li class="musicName">
           		
@@ -36,5 +50,30 @@
           
         </div><!--/.nav-collapse -->
       </div>
+
+<!-- Upload menu -->
+<div id="uploadMenu" class="container">
+	<div id="uploadModal">
+		<div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<i class="glyphicon glyphicon-ok"></i> Sikeres feltöltés
+		</div>
+<!--		<div class="alert alert-info">Feltöltés folyamatban</div>
+		<div class="alert alert-warning">Kevés a hely...</div>
+		<div class="alert alert-danger">Megszakadt a kapcsolat. <a href="#">Újra próbál...</a></div>-->
+	</div>
+	<span id='UploadArea'>
+		<h2>socket uploader</h2>
+			<label for="FileBox">Choose A File: </label><input type="file" id="FileBox"><br>
+			<label for="NameBox">Name: </label><input type="text" id="NameBox"><br>
+ 
+			<button  type='button' id='UploadButton' class='Button'>Upload</button>
+	</span>
+	<form id="uploadForm" enctype="multipart/form-data" action="/api/uploadfile" method="post">
+		<h2>Post upload</h2>
+		<input type="file" id="uploadFileInput" name="uploadFile" />
+		<input type="submit" value="Upload!">
+	</form>
+</div>
 
  
