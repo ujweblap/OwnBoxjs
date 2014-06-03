@@ -7,6 +7,15 @@ var express = require('express'),
 	p_now = require("performance-now"),
     fileBrowser = require('./libs/fileBrowser');
 
+	fileBrowser.readAllFiles('',function(file_list) {
+	
+	
+		//test!
+		console.log("-- TEST! --");
+		console.log(file_list);
+		//process.exit();
+	});
+	
 
 	server.listen(2013);
 	console.log("Server started at:		http://192.168.1.45:2013/");
