@@ -6,8 +6,9 @@ var express = require('express'),
 	public_dir = __dirname+'/public/',
 	p_now = require("performance-now"),
     fileBrowser = require('./libs/fileBrowser');
+	favLink = require('./libs/favLink');
 
-	fileBrowser.readAllFiles('',function(file_list) {
+	fileBrowser.readAllFiles('',function(err, file_list) {
 	
 	
 		//test!
@@ -71,10 +72,28 @@ var express = require('express'),
 		    res.send({error:"error_no_path"});
 	    }
     });
+	app.post('/api/getLinks',function(req,res) {
+		favLink.links(function(data) {
+			if(!data.err){
+				res.send(data);
+			}
+		});
+	});
 	
 	app.use(express.static(__dirname + '/public'));
 
 	io.sockets.on('connection', function(socket){
+
+		socket.on('links',function(socket_data) {
+			favLink.links(function(data) {
+				if(!data.err){
+					socket.emit('dataLinks',data,function() {
+						console.log('dataLinks');
+						console.log(data);
+					});
+				}
+			});
+		});
 
 		socket.on('fileContentRequest', function(data){
             fileBrowser.fileContentRequest(socket, data);
