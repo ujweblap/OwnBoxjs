@@ -20,6 +20,7 @@
             <li><a class="menu menu_link" rel="link"><i class="glyphicon glyphicon-globe"></i> link</a></li>
             <li><a class="menu menu_info"  rel="info"><i class="glyphicon glyphicon-info-sign"></i>nfo</a></li>
           </ul>
+          <!--
           <ul class="nav navbar-right navbar-nav">
           	<li>
 	          <form class="navbar-form navbar-left" role="search">
@@ -30,6 +31,7 @@
 	          </form>
 	         </li>
 	      </ul> 
+	      -->
           <ul class="nav navbar-right navbar-nav">
           	<li class="musicName">
           		
@@ -64,10 +66,38 @@
 	</div>
 	<span id='UploadArea'>
 		<h2>socket uploader</h2>
-			<label for="FileBox">Choose A File: </label><input type="file" id="FileBox"><br>
+			<div class="row">
+				<div class="col-lg-6">
+				  <div class="input-group">
+				    <span class="input-group-addon">
+				      <label for="FileBox">Choose A File: </label>
+				    </span>
+					<input type="file" class="form-control" id="FileBox">
+				  </div><!-- /input-group -->
+				</div><!-- /.col-lg-6 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-6">
+				  <div class="input-group">
+				    <span class="input-group-addon">
+				      Put in folder <input type="checkbox" class="add_folder">
+				    </span>
+				    <input type="text" class="form-control" name="new_folder_name" placeholder="Folder name">
+				  </div><!-- /input-group -->
+				</div><!-- /.col-lg-6 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-6">
+				<div class="input-group">
+				  <span class="input-group-addon">File name: </span>
+				  <input type="text" class="form-control" placeholder="File name">
+				</div>
+				</div>
+			</div>
 			<label for="NameBox">Name: </label><input type="text" id="NameBox"><br>
- 
-			<button  type='button' id='UploadButton' class='Button'>Upload</button>
+ 			<div class="row">
+				<button  type='button' id='UploadButton' class='btn btn-block btn-success'>Upload</button>
+			</div>
 	</span>
 	<form id="uploadForm" enctype="multipart/form-data" action="/api/uploadfile" method="post">
 		<h2>Post upload</h2>

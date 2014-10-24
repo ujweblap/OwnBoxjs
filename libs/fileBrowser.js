@@ -194,21 +194,27 @@ module.exports = (function(){
 		crud.save('files',data._file,{type:data.type});
 	};
 
-	var readFilesProcess = 1;
-	var readAllFiles = function(path, callback) {
+	var readFilesProcess = 0;
+	var readAllFiles = function(path, callbackFn) {
 		getFileList({path:path,drive:"USB"},function(files) {
 			//console.log("depth: "+files.depth);
 			//console.log("path: "+files);
 			//handle dir storage
+			var childs = [];
 			saveDirectory({path:files.path,depth:files.depth});
 			for(file in files.files_data){
+				//if dir
 				if(files.files_data[file].is_dir && !files.files_data[file].is_file){
 					//console.log(files.files_data[file].public_path);
+					childs.push(files.files_data[file].public_path.substr(8));
+					/*
 					readFilesProcess++;
 					readAllFiles(files.files_data[file].public_path.substr(8), function(files) {
 						//console.log("egy szál befejezve: "+files.path);
 					});
+					*/
 				}
+				//if file
 				if(!files.files_data[file].is_dir && files.files_data[file].is_file){
 					//handle file storage
 					saveFile({
@@ -219,11 +225,23 @@ module.exports = (function(){
 					});
 				}
 			}
-			readFilesProcess--;
-			callback(files);
-			if(readFilesProcess==0){
-				console.log("----ALL PROCESS OK!");
+			//readFilesProcess--;
+			
+			if(childs.length==0){
+				callbackFn(null, files);
+			} else {
+				readFilesProcess+=childs.length;
+				async.map(childs,readAllFiles,function(err,res_files) {
+					readFilesProcess-=childs.length;
+					callbackFn(null, res_files);
+					if(readFilesProcess==0){
+						console.log("----ALL PROCESS OK!");
+					}
+				});
 			}
+			/*
+			callbackFn(files);
+			*/
 		});
 	};
 

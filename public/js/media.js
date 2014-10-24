@@ -108,6 +108,7 @@ $(function() {
 	var $fl_container = $("#fl_container");
 	var $file_list = $("#file_list");
 	var $path = $("#path");
+	var $modal = $("#modal");
 	function fileContentRequest(path){
 		console.log("fileContentRequest",path);
 		socket.emit("fileContentRequest",{"path":""+path});
@@ -138,6 +139,13 @@ $(function() {
 			getFileList(act_path);
 		});
 		$path.append($path_elem);
+	}
+	function getNewFolder() {
+		$modal.html("<h2>új könyvtár</h2> <input type='text'>");
+		$("#modal").modal();
+		$('#modal').on('hidden.bs.modal', function (e) {
+			$("#modalBody").html("");
+		});
 	}
 	socket.on("fileContentResponse", function(data){
 		//$("#videoModalBody").html("<textarea id='file_content_original' class='code_mirror file_content'>"+data+"</textarea>");
@@ -239,6 +247,10 @@ $(function() {
 	$refresh = $("#refresh");
 	$(document).on("click","#refresh",function() {
 		getFileList(current_path);
+	});
+	$new_folder = $("#new_folder");
+	$(document).on("click","#new_folder",function() {
+		getNewFolder();
 	});
 	$home_tr = $("#home_tree");
 	$(document).on("click","#home_tree",function() {
